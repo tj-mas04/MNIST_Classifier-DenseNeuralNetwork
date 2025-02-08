@@ -1,0 +1,180 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyP4r3Vvu//nNCtgk87VZt3d",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/tj-mas04/mnist_training/blob/main/Refined%20Model\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "dLI2WvOjTS6L"
+      },
+      "outputs": [],
+      "source": [
+        "# Import necessary libraries\n",
+        "import tensorflow as tf\n",
+        "from tensorflow import keras\n",
+        "from tensorflow.keras import layers\n",
+        "from tensorflow.keras.datasets import mnist"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Load and preprocess the MNIST dataset\n",
+        "(x_train, y_train), (x_test, y_test) = mnist.load_data()\n",
+        "x_train = x_train.reshape(-1, 28*28).astype(\"float32\") / 255.0\n",
+        "x_test = x_test.reshape(-1, 28*28).astype(\"float32\") / 255.0"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "z7GX8lG4TX5R",
+        "outputId": "34100471-867b-466a-8613-ef55b975687f"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz\n",
+            "\u001b[1m11490434/11490434\u001b[0m \u001b[32m━━━━━━━━━━━━━━━━━━━━\u001b[0m\u001b[37m\u001b[0m \u001b[1m0s\u001b[0m 0us/step\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model = keras.Sequential([\n",
+        "    layers.Dense(512, activation='relu', input_shape=(28*28,)),  # ✅ Correct\n",
+        "    layers.Dense(256, activation='relu'),\n",
+        "    layers.Dense(10)\n",
+        "])\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Zw6ah0kYTacP",
+        "outputId": "0e952784-8885-4821-c1d7-a6d62c5ddcf2"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "/usr/local/lib/python3.11/dist-packages/keras/src/layers/core/dense.py:87: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.\n",
+            "  super().__init__(activity_regularizer=activity_regularizer, **kwargs)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Compile the model\n",
+        "model.compile(\n",
+        "    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),\n",
+        "    optimizer=keras.optimizers.Adam(learning_rate=0.001),\n",
+        "    metrics=[\"accuracy\"],\n",
+        ")"
+      ],
+      "metadata": {
+        "id": "NTnMJ9BKTcHK"
+      },
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Train the model\n",
+        "model.fit(x_train, y_train, batch_size=32, epochs=5, verbose=2)\n",
+        "\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Q2RhMJU6TqjD",
+        "outputId": "f05825f8-e6a9-4144-acb6-443dde4cedc2"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Epoch 1/5\n",
+            "1875/1875 - 22s - 11ms/step - accuracy: 0.1110 - loss: 2.3132\n",
+            "Epoch 2/5\n",
+            "1875/1875 - 20s - 11ms/step - accuracy: 0.0994 - loss: 2.3026\n",
+            "Epoch 3/5\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Evaluate the model\n",
+        "test_loss, test_acc = model.evaluate(x_test, y_test, batch_size=32, verbose=2)\n",
+        "print(f\"Test Accuracy: {test_acc * 100:.2f}%\")\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "YLOnqQE1TtWW"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Display the model summary\n",
+        "model.summary()\n"
+      ],
+      "metadata": {
+        "id": "gFOpFWCKTuiu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "nRGAj2-7Tu_b"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
