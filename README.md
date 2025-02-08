@@ -1,246 +1,91 @@
-{
-  "nbformat": 4,
-  "nbformat_minor": 0,
-  "metadata": {
-    "colab": {
-      "provenance": [],
-      "authorship_tag": "ABX9TyOZ+flIfnT/JXFbk1UVX0Ta",
-      "include_colab_link": true
-    },
-    "kernelspec": {
-      "name": "python3",
-      "display_name": "Python 3"
-    },
-    "language_info": {
-      "name": "python"
-    }
-  },
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {
-        "id": "view-in-github",
-        "colab_type": "text"
-      },
-      "source": [
-        "<a href=\"https://colab.research.google.com/github/tj-mas04/mnist_training/blob/main/Model1\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {
-        "id": "DS_DHfWVkWPI"
-      },
-      "outputs": [],
-      "source": [
-        "import tensorflow as tf\n",
-        "from tensorflow import keras\n",
-        "from tensorflow.keras import layers\n",
-        "from tensorflow.keras.datasets import mnist"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "(x_train, y_train), (x_test, y_test) = mnist.load_data()\n",
-        "x_train = x_train.reshape(-1,28*28).astype(\"float32\")/255.0\n",
-        "x_test = x_test.reshape(-1,28*28).astype(\"float32\")/255.0"
-      ],
-      "metadata": {
-        "id": "oy5ZSu8_lFet"
-      },
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "'''model = keras.Sequential(\n",
-        "    [\n",
-        "        keras.Input(shape=(28*28)),\n",
-        "        layers.Dense(512, activation='relu'),\n",
-        "        layers.Dense(256, activation='relu'),\n",
-        "        layers.Dense(10),\n",
-        "    ]\n",
-        ")'''"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 70
-        },
-        "id": "1d81gV1elaLg",
-        "outputId": "632efc0e-273c-4eb8-e4b6-df682a55f263"
-      },
-      "execution_count": null,
-      "outputs": [
-        {
-          "output_type": "execute_result",
-          "data": {
-            "text/plain": [
-              "\"model = keras.Sequential(\\n    [\\n        keras.Input(shape=(28*28)),\\n        layers.Dense(512, activation='relu'),\\n        layers.Dense(256, activation='relu'),\\n        layers.Dense(10),\\n    ]\\n)\""
-            ],
-            "application/vnd.google.colaboratory.intrinsic+json": {
-              "type": "string"
-            }
-          },
-          "metadata": {},
-          "execution_count": 30
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "model.compile(\n",
-        "    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),\n",
-        "    optimizer=keras.optimizers.Adam(learning_rate=0.001),\n",
-        "    metrics=[\"accuracy\"],\n",
-        ")"
-      ],
-      "metadata": {
-        "id": "O90iwJYA3A9H"
-      },
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "model.fit(x_train, y_train, batch_size=32, epochs=5,verbose=2)\n",
-        "model.evaluate(x_test, y_test, batch_size=32, verbose=2)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "q39tSJ_938XM",
-        "outputId": "e8f03992-48d1-40b4-d5a6-54d62cfdff4e"
-      },
-      "execution_count": null,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Epoch 1/5\n",
-            "1875/1875 - 15s - loss: 0.1881 - accuracy: 0.9427 - 15s/epoch - 8ms/step\n",
-            "Epoch 2/5\n",
-            "1875/1875 - 14s - loss: 0.0792 - accuracy: 0.9753 - 14s/epoch - 8ms/step\n",
-            "Epoch 3/5\n",
-            "1875/1875 - 14s - loss: 0.0539 - accuracy: 0.9826 - 14s/epoch - 8ms/step\n",
-            "Epoch 4/5\n",
-            "1875/1875 - 15s - loss: 0.0415 - accuracy: 0.9864 - 15s/epoch - 8ms/step\n",
-            "Epoch 5/5\n",
-            "1875/1875 - 15s - loss: 0.0320 - accuracy: 0.9893 - 15s/epoch - 8ms/step\n",
-            "313/313 - 1s - loss: 0.0813 - accuracy: 0.9796 - 946ms/epoch - 3ms/step\n"
-          ]
-        },
-        {
-          "output_type": "execute_result",
-          "data": {
-            "text/plain": [
-              "[0.08127609640359879, 0.9796000123023987]"
-            ]
-          },
-          "metadata": {},
-          "execution_count": 32
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "print(model.summmary())"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "YHI6lRmI2Zk1",
-        "outputId": "e41df771-a548-435e-ddc2-119a518bf682"
-      },
-      "execution_count": null,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Model: \"sequential\"\n",
-            "_________________________________________________________________\n",
-            " Layer (type)                Output Shape              Param #   \n",
-            "=================================================================\n",
-            " dense (Dense)               (None, 512)               401920    \n",
-            "                                                                 \n",
-            " dense_1 (Dense)             (None, 256)               131328    \n",
-            "                                                                 \n",
-            " dense_2 (Dense)             (None, 10)                2570      \n",
-            "                                                                 \n",
-            "=================================================================\n",
-            "Total params: 535818 (2.04 MB)\n",
-            "Trainable params: 535818 (2.04 MB)\n",
-            "Non-trainable params: 0 (0.00 Byte)\n",
-            "_________________________________________________________________\n",
-            "None\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "inputs = keras.Input(shape=(784))\n",
-        "x=layers.Dense(512, activation='relu', name ='first')(inputs)\n",
-        "x=layers.Dense(256,activation='relu', name = 'second')(x)\n",
-        "outputs=layers.Dense(10,activation='softmax')(x)\n",
-        "model=keras.Model(inputs=inputs, outputs=outputs)\n"
-      ],
-      "metadata": {
-        "id": "uWFmlilq2eei"
-      },
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "print(model.summary())"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "wQZFTjz_Eir5",
-        "outputId": "a6f70df8-bc3b-49e6-a294-25ff5081ac43"
-      },
-      "execution_count": null,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Model: \"model_2\"\n",
-            "_________________________________________________________________\n",
-            " Layer (type)                Output Shape              Param #   \n",
-            "=================================================================\n",
-            " input_7 (InputLayer)        [(None, 784)]             0         \n",
-            "                                                                 \n",
-            " first (Dense)               (None, 512)               401920    \n",
-            "                                                                 \n",
-            " second (Dense)              (None, 256)               131328    \n",
-            "                                                                 \n",
-            " dense_12 (Dense)            (None, 10)                2570      \n",
-            "                                                                 \n",
-            "=================================================================\n",
-            "Total params: 535818 (2.04 MB)\n",
-            "Trainable params: 535818 (2.04 MB)\n",
-            "Non-trainable params: 0 (0.00 Byte)\n",
-            "_________________________________________________________________\n",
-            "None\n"
-          ]
-        }
-      ]
-    }
-  ]
-}
+# MNIST Training with TensorFlow and Keras
+
+## Overview
+This project demonstrates how to train a deep learning model using TensorFlow and Keras on the MNIST dataset. The model is built using a simple fully connected neural network and achieves high accuracy on handwritten digit classification.
+
+## Dataset
+The MNIST dataset consists of 60,000 training images and 10,000 testing images of handwritten digits (0-9). Each image has a size of 28x28 pixels and is grayscale.
+
+## Dependencies
+Ensure you have the following dependencies installed:
+
+```bash
+pip install tensorflow numpy
+```
+
+Alternatively, you can run this project in Google Colab using the badge below:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tj-mas04/mnist_training/blob/main/Model1)
+
+## Model Architecture
+The model consists of three fully connected layers:
+- Input layer with 784 neurons (flattened 28x28 image)
+- Hidden layer with 512 neurons (ReLU activation)
+- Hidden layer with 256 neurons (ReLU activation)
+- Output layer with 10 neurons (softmax activation for classification)
+
+## Code Implementation
+### 1. Importing Required Libraries
+```python
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.datasets import mnist
+```
+
+### 2. Loading and Preprocessing Data
+```python
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train = x_train.reshape(-1, 28*28).astype("float32") / 255.0
+x_test = x_test.reshape(-1, 28*28).astype("float32") / 255.0
+```
+
+### 3. Defining the Model
+```python
+model = keras.Sequential([
+    keras.Input(shape=(28*28)),
+    layers.Dense(512, activation='relu'),
+    layers.Dense(256, activation='relu'),
+    layers.Dense(10, activation='softmax')
+])
+```
+
+### 4. Compiling the Model
+```python
+model.compile(
+    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+    optimizer=keras.optimizers.Adam(learning_rate=0.001),
+    metrics=["accuracy"],
+)
+```
+
+### 5. Training the Model
+```python
+model.fit(x_train, y_train, batch_size=32, epochs=5, verbose=2)
+```
+
+### 6. Evaluating the Model
+```python
+model.evaluate(x_test, y_test, batch_size=32, verbose=2)
+```
+
+### 7. Model Summary
+```python
+print(model.summary())
+```
+
+## Results
+After training for 5 epochs, the model achieves an accuracy of around **98%** on the test dataset.
+
+## Future Improvements
+- Implementing Convolutional Neural Networks (CNNs) for better accuracy
+- Using Data Augmentation techniques
+- Experimenting with different optimizers and hyperparameters
+
+## Author
+**Sam T James**  
+GitHub: [tj-mas04](https://github.com/tj-mas04)
+
+## License
+This project is open-source and available under the MIT License.
+
